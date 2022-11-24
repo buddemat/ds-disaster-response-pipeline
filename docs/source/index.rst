@@ -5,12 +5,11 @@
 
 Welcome to disaster-response-pipeline's documentation!
 ======================================================
+The **Disaster Response Pipeline** is a Python project to learn to integrate and automate ETL and ML pipelines for classifying messages.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. note::
 
-
+   This project is under active development
 
 Indices and tables
 ==================
