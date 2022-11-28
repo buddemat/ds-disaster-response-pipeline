@@ -18,6 +18,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
+from sklearn.model_selection import GridSearchCV
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import nltk
@@ -65,12 +66,7 @@ def build_model():
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(
-                RandomForestClassifier(random_state=42,
-                                       n_estimators=200,
-                                       min_samples_split=3
-                )
-            )
+        ('clf', MultiOutputClassifier(RandomForestClassifier(random_state=42))
         )
     ])
     return pipeline
@@ -118,7 +114,14 @@ def main():
         model = build_model()
 
         print('Training model...')
-        model.fit(X_train, Y_train)
+        #model.fit(X_train, Y_train)
+        parameters = {
+            'clf__estimator__n_estimators': [50, 100, 200],
+            'clf__estimator__min_samples_split': [2, 3]
+        }
+        cv_search = GridSearchCV(model, param_grid=parameters, n_jobs=1, verbose=2)
+        cv_search.fit(X_train, Y_train)
+        model = cv_search.best_estimator_
 
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
