@@ -25,10 +25,10 @@ def load_data(messages_filepath: str, categories_filepath: str):
     return df_merged_data
 
 def clean_data(df_original):
-    """
+    """Cleans data (eliminate duplicates, re-encode features...).
 
-    :param pd.Dataframe df_original:
-    :return:
+    :param pd.Dataframe df_original: Input dataframe to be cleaned
+    :return: Cleaned dataframe
     :rtype: pd.DataFrame
     """
     df_clean = df_original.copy()
