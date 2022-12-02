@@ -119,7 +119,12 @@ def main():
             'clf__estimator__n_estimators': [50, 100, 200],
             'clf__estimator__min_samples_split': [2, 3]
         }
-        cv_search = GridSearchCV(model, param_grid=parameters, n_jobs=1, verbose=2)
+        cv_search = GridSearchCV(model,
+                                 param_grid=parameters,
+                                 cv=3,
+                                 n_jobs=-1,
+                                 verbose=2
+                                )
         cv_search.fit(X_train, Y_train)
         model = cv_search.best_estimator_
 

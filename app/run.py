@@ -1,3 +1,11 @@
+"""
+.. module:: run
+   :platform: Unix, Windows
+   :synopsis: Runs flask app that hosts webpage to display plots and
+              classify new messages.
+
+.. moduleauthor:: Matthias Budde
+"""
 import json
 import plotly
 import pandas as pd
@@ -6,7 +14,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar, Pie, Scatter
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -14,6 +22,12 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
+    """Tokenizer function.
+
+    :param text text to tokenize
+    :return: cleaned tokens
+    :rtype:
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -35,14 +49,47 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
-    
+    """Index function.
+
+    Generates index page with plotly visualizations.
+    """
+
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    category_counts = df.iloc[:,4:].sum()
+
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        {
+            'data': [
+                Scatter(
+                    x=genre_names,
+                    y=genre_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Pie(
+                    labels = category_counts.index.values,
+                    values = category_counts.values)
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Labels',
+            }
+        },
         {
             'data': [
                 Bar(
@@ -62,11 +109,11 @@ def index():
             }
         }
     ]
-    
+
     # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
+    ids = [f"graph-{i}" for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
     # render web page with plotly graphs
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
 
@@ -74,14 +121,17 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    """Function that gets user input, passes it to classifier and renders
+       classification results.
+    """
     # save user input in query
-    query = request.args.get('query', '') 
+    query = request.args.get('query', '')
 
     # use model to predict classification for query
     classification_labels = model.predict([query])[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
 
-    # This will render the go.html Please see that file. 
+    # This will render the go.html Please see that file.
     return render_template(
         'go.html',
         query=query,
@@ -90,6 +140,8 @@ def go():
 
 
 def main():
+    """Main function.
+    """
     app.run(host='0.0.0.0', port=3001, debug=True)
 
 
