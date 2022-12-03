@@ -35,7 +35,7 @@ def load_data(database_filepath):
     engine = create_engine(f'sqlite:///{database_filepath}')
     df_categorized_messages = pd.read_sql_table('CategorizedMessages', engine)
     X = df_categorized_messages['message']
-    Y = df_categorized_messages.iloc[:,4:]
+    Y = df_categorized_messages.iloc[:, 4:]
     return X, Y, Y.columns
 
 
@@ -67,9 +67,10 @@ def build_model():
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(RandomForestClassifier(random_state=42))
-        )
+         )
     ])
     return pipeline
+
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """Evaluates model pipeline.
@@ -108,7 +109,8 @@ def main():
         model_filepath = sys.argv[2]
         print(f'Loading data...\n    DATABASE: {database_filepath}')
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(
+            X, Y, test_size=0.2)
 
         print('Building model...')
         model = build_model()
@@ -124,7 +126,7 @@ def main():
                                  cv=3,
                                  n_jobs=-1,
                                  verbose=2
-                                )
+                                 )
         cv_search.fit(X_train, Y_train)
         model = cv_search.best_estimator_
 
@@ -137,9 +139,9 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
+        print('Please provide the filepath of the disaster messages database '
+              'as the first argument and the filepath of the pickle file to '
+              'save the model to as the second argument. \n\nExample: python '
               'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 

@@ -21,6 +21,7 @@ from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
+
 def tokenize(text):
     """Tokenizer function.
 
@@ -37,6 +38,7 @@ def tokenize(text):
         clean_tokens.append(clean_tok)
 
     return clean_tokens
+
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
@@ -57,7 +59,7 @@ def index():
     # extract data needed for visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    category_counts = df.iloc[:,4:].sum()
+    category_counts = df.iloc[:, 4:].sum()
 
     # create visuals
     graphs = [
@@ -82,8 +84,8 @@ def index():
         {
             'data': [
                 Pie(
-                    labels = category_counts.index.values,
-                    values = category_counts.values)
+                    labels=category_counts.index.values,
+                    values=category_counts.values)
             ],
 
             'layout': {
