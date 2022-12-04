@@ -65,7 +65,7 @@ def save_data(df_clean, database_filename):
     :rtype:
     """
     engine = create_engine(f'sqlite:///{database_filename}')
-    df_clean.to_sql('CategorizedMessages', engine, index=False)
+    df_clean.to_sql('CategorizedMessages', engine, index=False, if_exists='replace')
 
 
 def main():
