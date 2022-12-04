@@ -51,6 +51,8 @@ def clean_data(df_original):
 
     df_clean = df_clean.drop('categories', axis=1)
     df_clean = df_clean.merge(categories_split, on='id')
+    # re-encode column 'related' to binary
+    df_clean['related'] = df_clean['related'].apply(lambda x: 1 if x == 2 else x)
     df_clean = df_clean.drop_duplicates()
 
     return df_clean
