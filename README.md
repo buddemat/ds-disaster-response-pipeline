@@ -5,6 +5,8 @@ This repository contains my project submission to the Disaster Response Pipeline
 
 This project implements a machine learning pipeline for message classification. It includes a web app where an emergency worker can input a new message and get classification results in 36 categories. The web app also displays several visualizations of the data.
 
+This way, in an event of a disaster, quick classification of incoming messages is possible. This makes it possible to e.g. pre-filter messages before an emergency worker analyzes their content, distribute messages to different entities for further processing, or 
+
 The code is basically structured into three parts that build on each other:
 
 1. A module that cleans raw input data, joins categories and messages and re-encodes the raw data into binary features. The results are stored in an [SQLite](https://sqlite.org) database.
