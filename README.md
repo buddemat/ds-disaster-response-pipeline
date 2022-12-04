@@ -3,7 +3,9 @@ This repository contains my project submission to the Disaster Response Pipeline
 
 ## Project Summary
 
-This project implements a machine learning pipeline for message classification. The code is basically structured into three parts that build on each other:
+This project implements a machine learning pipeline for message classification. It includes a web app where an emergency worker can input a new message and get classification results in 36 categories. The web app also displays several visualizations of the data.
+
+The code is basically structured into three parts that build on each other:
 
 1. A module that cleans raw input data, joins categories and messages and re-encodes the raw data into binary features. The results are stored in an [SQLite](https://sqlite.org) database.
 
@@ -31,7 +33,7 @@ ds-disaster-response-pipeline
 │   ├── source
 │   │   ├── conf.py                   # Sphinx configuration.
 │   │   └── index.rst                 # Template for main documentation page.
-│   └── build                         # Target directory for Sphinx document generation.
+│   └── build                         # Target directory for Sphinx documentation generation.
 │       └── README.md                 # Readme file. 
 ├── models
 │   └── train_classifier.py           # Module that trains and saves message classifier.
@@ -100,4 +102,4 @@ The documentation of this project is built using the Python Documentation Genera
    $ make html
    ```
 
-Other targets than HTML are also possible, refer to the Sphinx documentation.
+Other targets than HTML are also possible, refer to the [`sphinx-build` documentation](https://www.sphinx-doc.org/en/master/man/sphinx-build.html).
